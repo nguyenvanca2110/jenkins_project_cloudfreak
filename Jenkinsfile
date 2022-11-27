@@ -1,25 +1,25 @@
 pipeline {
   agent any
     tools {
-      maven 'maven3'
-                 jdk 'JDK8'
+      maven 'MAVEN_3.8'
+      jdk 'JDK17'
     }
     stages {      
-        stage('Build maven ') {
+        stage('Build maven image') {
             steps { 
                     sh 'pwd'      
-                    sh 'mvn  clean install package'
+                    sh 'mvn clean install package'
             }
         }
         
-        stage('Copy Artifact') {
+        stage('Copy Artifact from Target to Docker') {
            steps { 
                    sh 'pwd'
 		   sh 'cp -r target/*.jar docker'
            }
         }
          
-        stage('Build docker image') {
+        stage('Push to Docker image') {
            steps {
                script {         
                  def customImage = docker.build('initsixcloud/petclinic', "./docker")
